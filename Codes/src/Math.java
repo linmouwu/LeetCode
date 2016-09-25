@@ -2,32 +2,19 @@
  * Created by mowerlin on 21/09/2016.
  */
 public class Math {
-    public int findNthDigit(int n) {
+    static void arrangeCoins(long[] coins) {
 
-        // Step is the number of the digits in the current frame.
-        int step = 1;
-        // Nine is the count of the number in the current frame.
-        long nine = 9;
-        // Get the start point of the final number.
-        long start = 1;
+        for (int i = 0; i < coins.length; i++) {
 
-        while (n > step * nine) {
-            n -= step * nine;
-            step += 1;
-            nine *= 10;
-
-            // Calculate the final number.
-            start *= 10;
+            // For level n, it has coins between (n*(n-1)/2, n*(n+1)/2).
+            long root = (long) java.lang.Math.sqrt(2 * coins[i]);
+            // Thus we can easily find out the number of the coins in that level from the root.
+            if(root*(root+1) == coins[i]*2){
+                System.out.println(root);
+            }else{
+                System.out.println(root-1);
+            }
         }
-
-        // Here n-1 because of the first number always contains the part from the last frame.
-        start += (n - 1) / step;
-
-        // Get the number.
-        String s = Long.toString(start);
-
-        // Get the offset.
-        return Character.getNumericValue(s.charAt((n - 1) % step));
     }
 
 }
