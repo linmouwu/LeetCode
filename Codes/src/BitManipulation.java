@@ -3,6 +3,32 @@
  */
 public class BitManipulation {
 
+    public int getSum(int a, int b) {
+        int sum = a;
+        int carry = b;
+        while (carry != 0) {
+            int tmp = sum;
+            // The sum is XOR. And the carry is AND with shifting to left.
+            sum = tmp ^ carry;
+            carry = (tmp & carry) << 1;
+        }
+        return sum;
+    }
+
+    public int singleNumber(int[] nums) {
+        int le = nums.length;
+        if (le == 1)
+            return nums[0];
+        int result = nums[0];
+        int i = 1;
+        // The key idea is that a XOR a = 0;
+        while (i < nums.length) {
+            result ^= nums[i];
+            i++;
+        }
+        return result;
+    }
+
     public boolean validUtf8(int[] data) {
         int le = data.length;
 

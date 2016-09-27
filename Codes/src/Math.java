@@ -17,4 +17,44 @@ public class Math {
         }
     }
 
+    public int divide(int dividend, int divisor) {
+        // If overflow, return Integer.Max_value.
+        if (divisor == 0 || (dividend == Integer.MIN_VALUE && divisor == -1))
+            return Integer.MAX_VALUE;
+
+        if (dividend == 0 || divisor == 1)
+            return dividend;
+
+        // Using negative number can avoid over flow.
+        if (dividend > 0)
+            return -divide(-dividend, divisor);
+
+        if (divisor > 0)
+            return -divide(dividend, -divisor);
+
+        int shiftedDivisor = divisor;
+        int shift = 0;
+
+        //
+        while ((shiftedDivisor << 1) < 0) {
+            ++shift;
+            shiftedDivisor <<= 1;
+        }
+
+        int quotient = 0;
+
+        int remainder = dividend;
+
+        while (shift >= 0) {
+            if (remainder <= shiftedDivisor) {
+                quotient |= 1 << shift;
+                remainder -= shiftedDivisor;
+            }
+
+            shiftedDivisor >>= 1;
+            --shift;
+        }
+        return quotient;
+    }
+
 }
