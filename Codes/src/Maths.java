@@ -1,7 +1,7 @@
 /**
  * Created by mowerlin on 21/09/2016.
  */
-public class Math {
+public class Maths {
     static void arrangeCoins(long[] coins) {
 
         for (int i = 0; i < coins.length; i++) {

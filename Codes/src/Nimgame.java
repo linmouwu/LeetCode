@@ -6,6 +6,7 @@ class TreeNode {
     int val;
     TreeNode left;
     TreeNode right;
+
     TreeNode(int x) {
         val = x;
     }
@@ -35,6 +36,11 @@ class Interval {
         start = s;
         end = e;
     }
+
+    @Override
+    public String toString() {
+        return "Start: " + start + ", End: " + end;
+    }
 }
 
 
@@ -42,6 +48,7 @@ class Interval {
 class TreeLinkNode {
     int val;
     TreeLinkNode left, right, next;
+
     TreeLinkNode(int x) {
         val = x;
     }
@@ -51,10 +58,12 @@ class TreeLinkNode {
 class Point {
     int x;
     int y;
+
     Point() {
         x = 0;
         y = 0;
     }
+
     Point(int a, int b) {
         x = a;
         y = b;

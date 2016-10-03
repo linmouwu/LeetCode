@@ -1,9 +1,7 @@
-import java.util.*;
-import java.lang.*;
-
 /**
  * Created by mowerlin on 25/09/2016.
  */
+import java.util.*;
 public class BFSDFS {
 
     // User a helper to pass by the list and the level as arguments.

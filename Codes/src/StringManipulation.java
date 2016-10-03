@@ -1,6 +1,7 @@
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Stack;
 
 /**
  * Created by mowerlin on 25/09/2016.
@@ -13,6 +14,32 @@ public class StringManipulation {
             sb.append(s.charAt(i));
         }
         return sb.toString();
+    }
+
+    public int lengthLongestPath(String input) {
+        // Separate the file path.
+        String[] parts = input.split("\n");
+        // Storing the current length of the file path.
+        Stack<Integer> stack = new Stack<>();
+        int max = 0;
+        for (String part : parts) {
+            // '\t' is used to defined the level of the file path.
+            int level = part.lastIndexOf("\t") + 1;
+            int currentLen = part.substring(level).length();
+            while (stack.size() != level) {
+                stack.pop();
+            }
+            if(stack.isEmpty()){
+                stack.push(currentLen);
+            }else{
+                currentLen += stack.peek() + 1;
+                stack.push(currentLen);
+            }
+            if(part.contains(".")){
+                max = Math.max(max, stack.peek());
+            }
+        }
+        return max;
     }
 
     public int ladderLength(String beginWord, String endWord, Set<String> wordList) {
