@@ -6,6 +6,44 @@ import java.util.Map;
  */
 public class Maths {
 
+    // Use slope to find whether the points are on the same line.
+    public int maxPoints(Point[] points) {
+        int length = points.length;
+        if (length <= 2)
+            return length;
+        int result = 0;
+        for (int i = 0; i < length; i++) {
+            int samePos = 0;
+            int xLine = 1;
+            Map<Double, Integer> sameLines = new HashMap<>();
+            for (int j = 0; j < length; j++) {
+                // If the same point, keep going.
+                if (i == j)
+                    continue;
+                // If on the same position, increase the count.
+                if (points[i].y == points[j].y && points[i].x == points[j].x) {
+                    samePos++;
+                }
+                // If on the x line, increase the x line counter.
+                if (points[i].x == points[j].x) {
+                    xLine++;
+                    continue;
+                }
+                // Find the slope.
+                double slope = (double) (points[i].y - points[j].y) / (double) (points[i].x - points[j].x);
+                if (sameLines.containsKey(slope)) {
+                    sameLines.put(slope, sameLines.get(slope) + 1);
+                } else {
+                    sameLines.put(slope, 2);
+                }
+                result = Math.max(result, sameLines.get(slope) + samePos);
+            }
+            result = Math.max(result, xLine);
+
+        }
+        return result;
+    }
+
     // Union Find
     public double[] calcEquation(String[][] equations, double[] values, String[][] queries) {
         // Store the root of the divisors, like a/b, a/c, a/c
