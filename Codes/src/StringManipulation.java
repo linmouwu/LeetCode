@@ -7,6 +7,143 @@ import java.util.Stack;
  * Created by mowerlin on 25/09/2016.
  */
 public class StringManipulation {
+
+    // Convert decimal to hexadecimal
+    public String toHex(int num) {
+        if (num == 0)
+            return "0";
+        // Convert the negative num into positive first.
+        boolean neg = false;
+        int remained = 0;
+        if (num < 0) {
+            neg = true;
+            // By adding 1. Two Components.
+            num = Math.abs(num + 1);
+        }
+        StringBuilder sb = new StringBuilder();
+        // The remain is the number, the dividing result is the next number to compute.
+        while (num > 0) {
+            remained = num % 16;
+            sb.append(convert(remained));
+            num /= 16;
+        }
+        // If neg, convert by the difference between the two characters.
+        if (neg) {
+            int max = sb.length();
+            StringBuilder nsb = new StringBuilder();
+            for (int i = 0; i < 8; i++) {
+                if (i >= max) {
+                    nsb.append("f");
+                } else {
+                    switch (sb.charAt(i)) {
+                        case 'a':
+                            nsb.append("5");
+                            break;
+                        case 'b':
+                            nsb.append("4");
+                            break;
+                        case 'c':
+                            nsb.append("3");
+                            break;
+                        case 'd':
+                            nsb.append("2");
+                            break;
+                        case 'e':
+                            nsb.append("1");
+                            break;
+                        case 'f':
+                            nsb.append("0");
+                            break;
+                        default:
+                            // Here should be 15 as 0+15 = 15;
+                            nsb.append(convert(15 - (sb.charAt(i) - '0')));
+                            break;
+                    }
+                }
+            }
+            return nsb.reverse().toString();
+        } else {
+            return sb.reverse().toString();
+        }
+    }
+
+    public boolean validWordAbbreviation(String word, String abbr) {
+        int sa = abbr.length();
+        int sw = word.length();
+        int i = 0;
+        int num = 0;
+        StringBuilder sb = new StringBuilder();
+        int total = 0;
+        while (i < sa) {
+            if ('0' < abbr.charAt(i) && abbr.charAt(i) <= '9' || abbr.charAt(i) == '0' && num > 0) {
+                num = num * 10 + (abbr.charAt(i) - '0');
+                i++;
+            } else {
+                total += (num);
+                if (total >= sw)
+                    return false;
+                if (word.charAt(total) == abbr.charAt(i)) {
+                    num = 0;
+                    total += 1;
+                    i++;
+                } else {
+                    return false;
+                }
+            }
+        }
+        if (total + num == sw) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private char convert(int num) {
+        switch (num) {
+            case 10:
+                return 'a';
+            case 11:
+                return 'b';
+            case 12:
+                return 'c';
+            case 13:
+                return 'd';
+            case 14:
+                return 'e';
+            case 15:
+                return 'f';
+            default:
+                return (char) ('0' + num);
+        }
+    }
+
+    public int longestPalindrome(String s) {
+        int[] lower = new int[26];
+        int[] upper = new int[26];
+        int le = s.length();
+        if (le <= 0)
+            return 0;
+        for (int i = 0; i < le; i++) {
+            // Like all other palindrome, use a fixed length array to mark the appearance of the characters.
+            if (Character.isLowerCase(s.charAt(i))) {
+                lower[s.charAt(i) - 'a']++;
+            } else {
+                upper[s.charAt(i) - 'A']++;
+            }
+        }
+        int result = 0;
+        int odd = 0;
+        for (int i = 0; i < 26; i++) {
+            // If some characters have odd appearance, we can choose one to add into the middle.
+            result += ((lower[i] / 2) * 2);
+            result += ((upper[i] / 2) * 2);
+            if (lower[i] % 2 == 1 || upper[i] % 2 == 1)
+                odd = 1;
+        }
+        return result + odd;
+    }
+
+
     public String reverseString(String s) {
         // Use StringBuilder to improve performance.
         StringBuilder sb = new StringBuilder();
