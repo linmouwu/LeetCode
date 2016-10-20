@@ -6,6 +6,42 @@ import java.util.Map;
  */
 public class Maths {
 
+    public String addStrings(String num1, String num2) {
+        if (num1.length() < num2.length()) {
+            String tmp = num1;
+            num1 = num2;
+            num2 = tmp;
+        }
+        StringBuilder sb1 = new StringBuilder(num1).reverse();
+        StringBuilder sb2 = new StringBuilder(num2).reverse();
+        int l1 = sb1.length();
+        int l2 = sb2.length();
+        StringBuilder result = new StringBuilder();
+        int incr = 0;
+        int i;
+        for (i = 0; i < l1 && i < l2; i++) {
+            int n1 = sb1.charAt(i) - '0';
+            int n2 = sb2.charAt(i) - '0';
+            int nr = n1 + n2 + incr;
+            incr = nr / 10;
+            nr = nr % 10;
+            result.append(nr);
+        }
+        while (i < l1) {
+            int n1 = sb1.charAt(i) - '0';
+            int nr = n1 + incr;
+            incr = nr / 10;
+            nr = nr % 10;
+            result.append(nr);
+            i++;
+        }
+        if(incr == 1)
+            result.append(1);
+
+        return result.reverse().toString();
+    }
+
+
     // Use slope to find whether the points are on the same line.
     public int maxPoints(Point[] points) {
         int length = points.length;

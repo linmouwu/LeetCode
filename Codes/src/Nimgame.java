@@ -22,6 +22,25 @@ class ListNode {
     }
 }
 
+class Node {
+    double value;
+    String root;
+
+    Node(double value, String root) {
+        this.value = value;
+        this.root = root;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) return false;
+        if (other == this) return true;
+        if (!(other instanceof Node)) return false;
+        Node node = (Node) other;
+        return this.value == node.value;
+    }
+}
+
 // Interval class -> defining the start time and end time.
 class Interval {
     int start;
