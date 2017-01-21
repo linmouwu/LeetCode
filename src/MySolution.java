@@ -107,6 +107,7 @@ public class MySolution {
         }
         return result;
     }
+
     public static void main(String[] argv) {
         MySolution ms = new MySolution();
         Interval i1 = new Interval(0, 4);

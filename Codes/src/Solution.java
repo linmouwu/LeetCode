@@ -12,57 +12,57 @@ import java.util.regex.Pattern;
 
 public class Solution {
 
-    public List<Integer> findSubstring(String s, String[] words) {
-        int sl = s.length();
-        int wl = words.length;
-        if (sl <= 0 || wl <= 0)
-            return new ArrayList<>();
-        int gap = words[0].length();
-        Map<String, Integer> wordMap = new HashMap<>();
-        for (String word : words) {
-            if (wordMap.containsKey(word)) {
-                wordMap.put(word, wordMap.get(word) + 1);
-            } else {
-                wordMap.put(word, 1);
-            }
-        }
-        System.out.println(wordMap);
-        int i = 0;
-        Map<String, Integer> usedMap = new HashMap<>();
-        List<Integer> result = new ArrayList<>();
-
-        int currentStart = 0;
-        while (i + gap <= sl) {
-            String current = s.substring(i, i + gap);
-            if (wordMap.containsKey(current) && wordMap.get(current) != 0) {
-                wordMap.put(current, wordMap.get(current) - 1);
-                if (usedMap.containsKey(current)) {
-                    usedMap.put(current, usedMap.get(current) + 1);
-                    wl--;
-                } else {
-                    usedMap.put(current, 1);
-                    wl--;
-                }
-                if (wl == 0) {
-                    result.add(currentStart);
-                    merge(usedMap, wordMap);
-                    usedMap = new HashMap<>();
-                    wl = words.length;
-                    currentStart += 1;
-                    i = currentStart;
-                    continue;
-                }
-                i += gap;
-            } else {
-                merge(usedMap, wordMap);
-                usedMap = new HashMap<>();
-                wl = words.length;
-                i++;
-                currentStart += 1;
-            }
-        }
-        return result;
-    }
+//    public List<Integer> findSubstring(String s, String[] words) {
+//        int sl = s.length();
+//        int wl = words.length;
+//        if (sl <= 0 || wl <= 0)
+//            return new ArrayList<>();
+//        int gap = words[0].length();
+//        Map<String, Integer> wordMap = new HashMap<>();
+//        for (String word : words) {
+//            if (wordMap.containsKey(word)) {
+//                wordMap.put(word, wordMap.get(word) + 1);
+//            } else {
+//                wordMap.put(word, 1);
+//            }
+//        }
+//        System.out.println(wordMap);
+//        int i = 0;
+//        Map<String, Integer> usedMap = new HashMap<>();
+//        List<Integer> result = new ArrayList<>();
+//
+//        int currentStart = 0;
+//        while (i + gap <= sl) {
+//            String current = s.substring(i, i + gap);
+//            if (wordMap.containsKey(current) && wordMap.get(current) != 0) {
+//                wordMap.put(current, wordMap.get(current) - 1);
+//                if (usedMap.containsKey(current)) {
+//                    usedMap.put(current, usedMap.get(current) + 1);
+//                    wl--;
+//                } else {
+//                    usedMap.put(current, 1);
+//                    wl--;
+//                }
+//                if (wl == 0) {
+//                    result.add(currentStart);
+//                    merge(usedMap, wordMap);
+//                    usedMap = new HashMap<>();
+//                    wl = words.length;
+//                    currentStart += 1;
+//                    i = currentStart;
+//                    continue;
+//                }
+//                i += gap;
+//            } else {
+//                merge(usedMap, wordMap);
+//                usedMap = new HashMap<>();
+//                wl = words.length;
+//                i++;
+//                currentStart += 1;
+//            }
+//        }
+//        return result;
+//    }
 
     private void merge(Map<String, Integer> src, Map<String, Integer> dest) {
         for (Map.Entry<String, Integer> entry : src.entrySet()) {
@@ -75,8 +75,22 @@ public class Solution {
         }
     }
 
+    public int wordsTyping(String[] sentence, int rows, int cols) {
+        String s = String.join(" ", sentence) + " ";
+        int start = 0, l = s.length();
+        for (int i = 0; i < rows; i++) {
+            start += cols;
+            if (s.charAt(start % l) == ' ') {
+                start++;
+            } else {
+                while (start > 0 && s.charAt((start - 1) % l) != ' ') {
+                    start--;
+                }
+            }
+        }
 
-
+        return start / s.length();
+    }
 
 //    public int countBattleships(char[][] board) {
 //        int row = board.length;
@@ -159,7 +173,7 @@ public class Solution {
         int[][] people = new int[][]{{7, 0}, {4, 4}, {5, 0}, {6, 1}, {5, 2}, {7, 1}};
 
 
-        System.out.println(solution.largestBSTSubtree(one));
+        System.out.println(solution.wordsTyping(new String[]{"Hello", "World"}, 10, 11));
 //
 //        System.out.println(solution.calcEquation(new String[][]{{"a", "e"}, {"b", "e"}}, new double[]{4.0, 3.0}
 //                , new String[][]{{"a", "b"}, {"e", "e"}, {"x", "x"}}));
