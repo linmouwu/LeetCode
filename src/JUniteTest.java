@@ -2,8 +2,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 
 /**
@@ -74,4 +73,48 @@ public class JUniteTest {
         System.out.println(dpAndGreedy.wordBreak("leetcode", new ArrayList<>(Arrays.asList(new String[]{"leet", "code"}))));
     }
 
+    @Test
+    public void testnumSquares() {
+        System.out.println(dpAndGreedy.numSquares(4));
+    }
+
+    @Test
+    public void testminimumTotal() {
+        List<Integer> one = new ArrayList<>();
+        List<Integer> two = new ArrayList<>();
+        List<Integer> three = new ArrayList<>();
+        List<Integer> four = new ArrayList<>();
+
+        one.add(2);
+        two.add(3);
+        two.add(4);
+        three.add(6);
+        three.add(5);
+        three.add(7);
+        four.add(4);
+        four.add(1);
+        four.add(8);
+        four.add(3);
+
+
+        List<List<Integer>> lists = new ArrayList<>();
+        lists.add(one);
+        lists.add(two);
+        lists.add(three);
+        lists.add(four);
+
+        System.out.println(dpAndGreedy.minimumTotal(lists));
+    }
+
+    @Test
+    public void testcoinChange() {
+        System.out.println(dpAndGreedy.coinChange(new int[]{2}, 3));
+    }
+
+    @Test
+    public void testnumDecodings() {
+        System.out.println(dpAndGreedy.numDecodings("0000"));
+        System.out.println(dpAndGreedy.numDecodings("70"));
+        System.out.println(dpAndGreedy.numDecodings("110"));
+    }
 }
