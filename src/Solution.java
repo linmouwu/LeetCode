@@ -4,6 +4,8 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.locks.StampedLock;
 import java.util.stream.Collector;
 
+import junit.framework.*;
+
 /**
  * Created by mowerlin on 30/06/2016.
  */
@@ -810,7 +812,122 @@ public class Solution {
         larger[i] = tmp;
     }
 
+    public String multiply(String num1, String num2) {
+        int l1 = num1.length();
+        int l2 = num2.length();
+        int[] resultArray = new int[l1 + l2];
+        for (int i = l1 - 1; i >= 0; i--) {
+            for (int j = l2 - 1; j >= 0; j--) {
+                int d1 = num1.charAt(i) - '0';
+                int d2 = num2.charAt(j) - '0';
+                resultArray[i + j + 1] += d1 * d2;
+            }
+        }
 
+        int carry = 0;
+        int digit = 0;
+        for (int i = l1 + l2 - 1; i >= 0; i--) {
+            int current = resultArray[i] + carry;
+            carry = current / 10;
+            digit = current % 10;
+            resultArray[i] = digit;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i : resultArray) {
+            if (sb.length() != 0 || i != 0) {
+                sb.append(i);
+            }
+        }
+        return sb.toString();
+    }
+
+
+    public int jumpDP(int[] nums) {
+        if (nums.length <= 1) {
+            return 0;
+        }
+
+        int[] steps = new int[nums.length];
+
+        Arrays.fill(steps, nums.length);
+        steps[0] = 0;
+        for (int i = 1; i < nums.length; i++) {
+            for (int j = i - 1; j >= 0; j--) {
+                if (nums[j] + j >= i) {// j + nums[j] >= i - j;
+                    steps[i] = Math.min(steps[i], steps[j] + 1);
+                }
+            }
+        }
+
+        return steps[nums.length - 1];
+
+    }
+
+    public int jump(int[] nums) {
+        int farthest = 0;
+        int end = 0;
+        int result = 0;
+        for (int i = 0; i < nums.length; i++) {
+            farthest = Math.max(farthest, i + nums[i]);
+            if (i == end) {
+                end = farthest;
+                result++;
+            }
+        }
+        return result;
+    }
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int start = 0;
+        int tank = 0;
+        int total = 0;
+        for (int i = 0; i < gas.length; i++) {
+            tank += (gas[i] - cost[i]);
+            if (tank < 0) {
+                start = i + 1;
+                total += tank;
+                tank = 0;
+            }
+        }
+
+        return total + tank < 0 ? -1 : start;
+    }
+
+    public int largestRectangleArea(int[] heights) {
+        int result = 0;
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i <= heights.length; i++) {
+            int h = i == heights.length ? 0 : heights[i];
+            if (stack.isEmpty() || heights[stack.peek()] <= h) {
+                stack.push(i);
+            } else {
+                int next = stack.pop();
+                result = Math.max(result, heights[next] * (stack.isEmpty() ? i : i - stack.peek() - 1));
+                i--;
+            }
+        }
+        return result;
+    }
+
+    private int result = 0;
+
+    public int findTargetSumWays(int[] nums, int S) {
+        helper(nums, S, 0, 0);
+        return this.result;
+    }
+
+    private void helper(int[] nums, int S, int i, int current) {
+        if (i == nums.length) {
+            if (current == S) {
+                this.result++;
+            }
+            return;
+        }
+        helper(nums, S, i + 1, current + nums[i]);
+        helper(nums, S, i + 1, current - nums[i]);
+    }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
@@ -867,7 +984,7 @@ public class Solution {
         int[][] matrix = new int[][]{{1, 2, 0, 4}, {5, 6, 7, 8}, {9, 0, 11, 12}, {13, 14, 15, 16}};
 
 //        solution.setZeroes(matrix);
-        System.out.println(Arrays.toString(solution.combinationSort(new int[]{1, 2, 4, 6, 8, 0, 0, 0, 0}, new int[]{3, 3, 4, 5}, 5)));
+        System.out.println((solution.jump(new int[]{1, 1, 1, 1})));
 
     }
 }
