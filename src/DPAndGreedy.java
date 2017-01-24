@@ -258,7 +258,7 @@ public class DPAndGreedy {
             if (chars[i] == '0') {
                 if (chars[i - 1] == '1' || chars[i - 1] == '2') {
                     ways[i] = i == 1 ? 1 : ways[i - 2];
-                }else{
+                } else {
                     return 0;
                 }
             } else if (chars[i] >= '1' && chars[i] <= '6') {
@@ -271,4 +271,90 @@ public class DPAndGreedy {
         }
         return ways[chars.length - 1];
     }
+
+    // f(i) = f(i - 1), if f(i) is cooldown;
+    // or max{f(j - 2) + price[i] - price[j]}, i is sell, j is buy, and j - 1 is cooldown.
+    public int maxProfit2(int[] prices) {
+        if (prices.length <= 1) {
+            return 0;
+        }
+        int[] profits = new int[prices.length];
+        profits[0] = 0;
+        profits[1] = Math.max(prices[1] - prices[0], 0);
+        for (int i = 2; i < prices.length; i++) {
+            for (int j = i - 1; j >= 0; j--) {
+                int previous = j <= 1 ? 0 : profits[j - 2];
+                profits[i] = Math.max(profits[i], Math.max(profits[i - 1], previous + (prices[i] - prices[j])));
+            }
+        }
+        return profits[prices.length - 1];
+    }
+
+    // f(i) = max{f(i - j) * j, j from 1 to i - 1}, f(2) and f(3) are special as they have 1 as factor
+    public int integerBreak(int n) {
+        int[] result = new int[n + 1];
+        result[0] = 0;
+        result[1] = 1;
+        if (n == 2) {
+            return 1;
+        }
+        if (n == 3) {
+            return 2;
+        }
+        result[2] = 2;
+        result[3] = 3;
+        for (int i = 3; i <= n; i++) {
+            for (int j = 1; j < i; j++) {
+                result[i] = Math.max(result[i], result[i - j] * j);
+            }
+        }
+        return result[n];
+    }
+
+    // f(i) = min{f(pointer2) * 2, f(pointer3) * 3, f(pointer5) * 5}
+    public int nthUglyNumber(int n) {
+        if (n <= 3) {
+            return n;
+        }
+        int[] nums = new int[n + 1];
+        nums[1] = 1;
+        int pointer2 = 1;
+        int pointer3 = 1;
+        int pointer5 = 1;
+        for (int i = 2; i <= n; i++) {
+            nums[i] = Math.min(nums[pointer2] * 2, Math.min(nums[pointer3] * 3, nums[pointer5] * 5));
+            if (nums[i] == nums[pointer2] * 2) {
+                pointer2++;
+            }
+            if (nums[i] == nums[pointer3] * 3) {
+                pointer3++;
+            }
+            if (nums[i] == nums[pointer5] * 5) {
+                pointer5++;
+            }
+        }
+        return nums[n];
+    }
+
+    // f(i, j) = f(i, k) + f(k, j) for all k from 3 to maxLength;
+    public int numberOfArithmeticSlices(int[] A) {
+        int length = A.length;
+        int[][] dp = new int[length][length];
+        for (int i = 0, j = 2; j < length; i++, j++) {
+            if (A[j] - A[j - 1] == A[i + 1] - A[i]) {
+                dp[i][j] = 1;
+            }
+        }
+        for (int i = 0; i < length - 2; i++) {
+            for (int j = i + 2; j < length; j++) {
+                int currentGap = 0;
+                boolean addition = true;
+                for (int k = 3; k <= i - j; k++) {
+
+                }
+            }
+        }
+        return dp[0][length - 1];
+    }
+
 }

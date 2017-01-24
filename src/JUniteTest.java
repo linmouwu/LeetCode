@@ -117,4 +117,31 @@ public class JUniteTest {
         System.out.println(dpAndGreedy.numDecodings("70"));
         System.out.println(dpAndGreedy.numDecodings("110"));
     }
+
+    @Test
+    public void testmaxProfit2() {
+        System.out.println(dpAndGreedy.maxProfit2(new int[]{1, 2, 3, 0}));
+    }
+
+    @Test
+    public void testintegerBreak() {
+        System.out.println(dpAndGreedy.integerBreak(10));
+    }
+
+    @Test
+    public void testnthUglyNumber() {
+        System.out.println(dpAndGreedy.nthUglyNumber(1));
+        System.out.println(dpAndGreedy.nthUglyNumber(2));
+        System.out.println(dpAndGreedy.nthUglyNumber(3));
+        System.out.println(dpAndGreedy.nthUglyNumber(4));
+        System.out.println(dpAndGreedy.nthUglyNumber(7));
+        System.out.println(dpAndGreedy.nthUglyNumber(10));
+    }
+
+    @Test
+    public void testnumberOfArithmeticSlices() {
+        System.out.println(dpAndGreedy.numberOfArithmeticSlices(new int[]{1,2,3}));
+        System.out.println(dpAndGreedy.numberOfArithmeticSlices(new int[]{1,2,3,4}));
+        System.out.println(dpAndGreedy.numberOfArithmeticSlices(new int[]{1,2,3,4,6,7,8,9}));
+    }
 }
