@@ -1,14 +1,16 @@
-import java.time.temporal.ChronoField;
 import java.util.*;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.locks.StampedLock;
-import java.util.stream.Collector;
-
-import junit.framework.*;
 
 /**
  * Created by mowerlin on 30/06/2016.
  */
+
+enum color {
+
+    YELLOW,
+    RED,
+    BLUE
+
+}
 
 
 public class Solution {
@@ -929,26 +931,403 @@ public class Solution {
         helper(nums, S, i + 1, current - nums[i]);
     }
 
+    public List<Integer> findSubstring(String s, String[] words) {
+        if (s.length() == 0 || words.length == 0) {
+            return new ArrayList<>();
+        }
+        int wordLength = words[0].length();
+        HashMap<String, Integer> map = new HashMap<>();
+        int used = 0;
+        for (String word : words) {
+            if (!map.containsKey(word)) {
+                map.put(word, 0);
+            }
+            map.put(word, map.get(word) + 1);
+            used++;
+        }
+        System.out.println(map);
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i <= s.length() - wordLength * words.length; i++) {
+            String nextWord = s.substring(i, i + wordLength);
+            if (map.containsKey(nextWord) && map.get(nextWord) > 0) {
+                map.put(nextWord, map.get(nextWord) - 1);
+                used--;
+                if (findSubstring(s.substring(i + wordLength), map, wordLength, used)) {
+                    result.add(i);
+                }
+                used++;
+                map.put(nextWord, map.get(nextWord) + 1);
+            }
+        }
+
+        return result;
+    }
+
+    private boolean findSubstring(String s, HashMap<String, Integer> map, int wordLength, int used) {
+        if (used == 0) {
+            return true;
+        }
+        String next = s.substring(0, wordLength);
+        if (map.containsKey(next) && map.get(next) > 0) {
+            map.put(next, map.get(next) - 1);
+            used--;
+            if (findSubstring(s.substring(wordLength), map, wordLength, used)) {
+                map.put(next, map.get(next) + 1);
+                return true;
+            } else {
+                map.put(next, map.get(next) + 1);
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    static class MyClass implements Comparable<MyClass> {
+        int date;
+        int val;
+
+        MyClass(int date, int val) {
+            this.date = date;
+            this.val = val;
+        }
+
+        @Override
+        public int compareTo(MyClass o) {
+            if (this.date - o.date == 0) {
+                return this.val - o.val;
+            }
+            return this.date - o.date;
+        }
+    }
+
+    public int findRadius(int[] houses, int[] heaters) {
+
+        if (houses.length == 0 || heaters.length == 0) {
+
+            return 0;
+
+        }
+
+        Arrays.sort(houses);
+        Arrays.sort(heaters);
+
+        int max = Integer.MIN_VALUE;
+
+        int[] minDis = new int[houses.length];
+
+        if (heaters.length == 1) {
+
+            for (int house : houses) {
+
+                max = Math.max(max, Math.abs(house - heaters[0]));
+
+            }
+
+        } else {
+
+            int rad = heaters[0] / 2;
+
+            int j = 0;
+
+            for (int i = 0; i < houses.length; i++) {
+
+                if (j == heaters.length) {
+
+                    minDis[i] = houses[i] - heaters[j - 1];
+                    continue;
+
+                }
+
+                if (houses[i] < heaters[j] - rad) {
+
+                    rad = heaters[j] - houses[i];
+                    minDis[i] = rad;
+
+                } else if (houses[i] > heaters[j] + rad) {
+
+                    j++;
+
+                    if (j == heaters.length) {
+
+                        rad = houses[i] - heaters[j - 1];
+                        minDis[i] = rad;
+
+                    } else {
+
+                        rad = (heaters[j] - heaters[j - 1]) / 2;
+                        i--;
+
+                    }
+
+                } else {
+
+                    minDis[i] = Math.min(rad, Math.abs(houses[i] - heaters[j]));
+
+                }
+
+            }
+
+            System.out.println(Arrays.toString(minDis));
+
+            for (int min : minDis) {
+
+                max = Math.max(min, max);
+            }
+
+        }
+
+        return max;
+
+    }
+
+    public String complexNumberMultiply(String a, String b) {
+
+        int[] numA = new int[2];
+        int[] numB = new int[2];
+
+        numA = parse(a);
+        numB = parse(b);
+
+        int first = numA[0] * numB[0];
+        int second = numA[1] * numB[1] * -1;
+        int third = numA[0] * numB[1] + numA[1] * numB[0];
+
+        return (first + second) + "+" + third + "i";
+
+    }
+
+    private int[] parse(String a) {
+
+        int[] num = new int[2];
+
+        int neg = 1;
+        int currentNum = 0;
+        for (int i = 0; i < a.length(); i++) {
+
+            if (a.charAt(i) == '-') {
+                neg = -1;
+            } else if (a.charAt(i) == '+') {
+                num[0] = currentNum * neg;
+                neg = 1;
+                currentNum = 0;
+            } else if (a.charAt(i) == 'i') {
+                num[1] = currentNum * neg;
+            } else {
+                currentNum = currentNum * 10 + (a.charAt(i) - '0');
+            }
+
+        }
+        return num;
+    }
+
+    public int countArrangement(int N) {
+
+        boolean[] visited = new boolean[N + 1];
+        helper(1, visited, N);
+        return result;
+    }
+
+    private void helper(int i, boolean[] visited, int N) {
+        if (i == N + 1) {
+            this.result++;
+            return;
+        }
+
+        for (int ci = 1; ci <= N; ci++) {
+
+            if (!visited[ci] && divide(ci, i)) {
+                visited[ci] = true;
+                helper(i + 1, visited, N);
+                visited[ci] = false;
+            }
+
+        }
+
+    }
+
+    private boolean divide(int a, int b) {
+        return (a % b == 0) || (b % a == 0);
+    }
+
+    public TreeNode convertBST(TreeNode root) {
+
+        if (root == null) {
+            return null;
+        }
+        TreeNode head = root;
+
+        Stack<TreeNode> stack = new Stack<>();
+
+        while (root != null) {
+            stack.push(root);
+            root = root.right;
+        }
+
+        int currentSum = 0;
+        while (!stack.isEmpty()) {
+            TreeNode next = stack.pop();
+            next.val += currentSum;
+            currentSum = next.val;
+            if (next.left != null) {
+                next = next.left;
+
+                while (next != null) {
+                    stack.push(next);
+                    next = next.right;
+                }
+            }
+
+        }
+
+        return head;
+    }
+
+    int[][] steps = new int[][]{{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+
+    public char[][] updateBoard(char[][] board, int[] click) {
+        if (board.length == 0) {
+            return board;
+        }
+
+        if (board[click[0]][click[1]] == 'M') {
+            board[click[0]][click[1]] = 'X';
+        }
+
+        checkIJ(click[0], click[1], board);
+        return board;
+    }
+
+    private void checkIJ(int i, int j, char[][] board) {
+
+        if (board[i][j] != 'X') {
+
+            int one = (i == 0 ? 0 : (j == 0 ? 0 : (board[i - 1][j - 1] == 'M' || board[i - 1][j - 1] == 'X' ? 1 : 0)));
+            int two = (i == 0 ? 0 : (board[i - 1][j] == 'M' || board[i - 1][j] == 'X' ? 1 : 0));
+            int three = (i == 0 ? 0 : (j == board[0].length - 1 ? 0 : (board[i - 1][j + 1] == 'M' || board[i - 1][j + 1] == 'X' ? 1 : 0)));
+            int four = (j == 0 ? 0 : (board[i][j - 1] == 'M' || board[i][j - 1] == 'X' ? 1 : 0));
+            int six = (j == board[0].length - 1 ? 0 : (board[i][j + 1] == 'M' || board[i][j + 1] == 'X' ? 1 : 0));
+            int seven = (i == board.length - 1 ? 0 : (j == 0 ? 0 : (board[i + 1][j - 1] == 'M' || board[i + 1][j - 1] == 'X' ? 1 : 0)));
+            int eight = (i == board.length - 1 ? 0 : (board[i + 1][j] == 'M' || board[i + 1][j] == 'X' ? 1 : 0));
+            int nine = (i == board.length - 1 ? 0 : (j == board[0].length - 1 ? 0 : (board[i + 1][j + 1] == 'M' || board[i + 1][j + 1] == 'X' ? 1 : 0)));
+
+            int sum = one + two + three + four + six + seven + eight + nine;
+
+            if (sum != 0) {
+
+                board[i][j] = (char) (sum + '0');
+
+            } else {
+
+
+            }
+
+        }
+
+    }
+
+
+    public int solution(String S) {
+        // write your code in Java SE 8
+        if (S == null || S.length() == 0) {
+            return 0;
+        }
+
+        String[] lines = S.split("\\s+");
+        int result = 0;
+        Map<Integer, Integer> numDuration = new TreeMap<>();
+
+        int maxDuration = Integer.MIN_VALUE;
+
+        for (String line : lines) {
+            String[] parts = line.split(",");
+
+            int time = parseTime(parts[0]);
+            int num = parseNum(parts[1]);
+
+            if (!numDuration.containsKey(num)) {
+                numDuration.put(num, 0);
+            }
+
+            numDuration.put(num, numDuration.get(num) + time);
+        }
+
+        for (Map.Entry<Integer, Integer> entry : numDuration.entrySet()) {
+
+            if (entry.getValue() > maxDuration) {
+                maxDuration = entry.getValue();
+            }
+
+            result += calculate(entry.getValue());
+
+        }
+
+        result -= calculate(maxDuration);
+
+        return result;
+    }
+
+    private int parseTime(String t) {
+
+        int result = 0;
+        String[] parts = t.split(":");
+
+        result += Integer.parseInt(parts[0]) * 60 * 60;
+        result += Integer.parseInt(parts[1]) * 60;
+        result += Integer.parseInt(parts[2]);
+
+        return result;
+    }
+
+    private int parseNum(String n) {
+
+        int result = 0;
+
+        for (int i = 0; i < n.length(); i++) {
+            if (Character.isDefined(n.charAt(i))) {
+                result = result * 10 + (n.charAt(i) - '0');
+            }
+        }
+
+        return result;
+
+    }
+
+    private int calculate(int n) {
+
+        int result = 0;
+
+        if (n < 300) {
+            result = n * 3;
+        } else {
+            int min = n / 60;
+            min += (n % 60 == 0) ? 0 : 1;
+            result = min * 150;
+        }
+
+        return result;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        TreeNode one = new TreeNode(3);
-        TreeNode two = new TreeNode(5);
-        TreeNode three = new TreeNode(1);
+        TreeNode one = new TreeNode(5);
+        TreeNode two = new TreeNode(2);
+        TreeNode three = new TreeNode(13);
         TreeNode four = new TreeNode(6);
-        TreeNode five = new TreeNode(2);
-        TreeNode six = new TreeNode(0);
+        TreeNode five = new TreeNode(3);
+        TreeNode six = new TreeNode(12);
         TreeNode seven = new TreeNode(8);
         TreeNode eight = new TreeNode(7);
         TreeNode nine = new TreeNode(4);
 
         one.left = two;
         one.right = three;
-        two.left = four;
+//        two.left = four;
         two.right = five;
         three.left = six;
-        three.right = seven;
-        five.left = eight;
-        five.right = nine;
+//        three.right = seven;
+//        five.left = eight;
+//        five.right = nine;
 
         int length = 5;
         int[][] update = new int[][]{};
@@ -972,6 +1351,7 @@ public class Solution {
         int[] num1 = new int[]{824, 8248, 824};
         int[] num2 = new int[]{2};
 
+
         Set<String> set = new HashSet<>();
         set.add("hot");
         set.add("hit");
@@ -983,8 +1363,33 @@ public class Solution {
 
         int[][] matrix = new int[][]{{1, 2, 0, 4}, {5, 6, 7, 8}, {9, 0, 11, 12}, {13, 14, 15, 16}};
 
-//        solution.setZeroes(matrix);
-        System.out.println((solution.jump(new int[]{1, 1, 1, 1})));
+        int[][] copy = new int[matrix.length][matrix[0].length - 1];
 
+        int i = 0;
+
+        for (int[] row : matrix) {
+
+            copy[i] = Arrays.copyOf(row, row.length);
+
+        }
+
+        System.out.println(matrix == copy ? "true" : "false");
+        matrix[0][0] = 4;
+        System.out.println(Arrays.toString(matrix[0]));
+        System.out.println(Arrays.toString(copy[0]));
+
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+        random.nextInt(1000);
+
+
+        System.out.println(solution.solution("00:01:07,400-234-090\n00:05:01,701-080-080\n00:05:00,400-234-090"));
+        System.out.println(solution.solution("00:01:07,400-234-091\n00:05:01,701-080-080\n00:05:00,400-234-090"));
+        System.out.println(solution.solution("00:01:07,400-234-091\n00:05:01,701-080-080\n00:05:00,400-234-090"));
+        System.out.println(solution.solution("00:01:07,400-234-091\n00:05:01,701-080-080\n00:05:00,400-234-090"));
+        System.out.println(solution.solution("00:01:07,400-234-091\n00:05:01,701-080-080\n00:05:00,400-234-090"));
+        System.out.println(solution.solution("00:01:07,400-234-091\n00:05:01,701-080-080\n00:05:00,400-234-090"));
+        System.out.println(solution.solution("00:01:07,400-234-091\n00:05:01,701-080-080\n00:05:00,400-234-090"));
+        System.out.println(solution.solution("00:01:07,400-234-091\n00:05:01,701-080-080\n00:05:00,400-234-090"));
     }
 }

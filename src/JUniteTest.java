@@ -17,6 +17,7 @@ public class JUniteTest {
 
     DPAndGreedy dpAndGreedy = new DPAndGreedy();
 
+    Amazon amazon = new Amazon();
 //    @Test
 //    public void myTest() {
 //        Assert.assertEquals(solution.toString(), string);
@@ -44,6 +45,13 @@ public class JUniteTest {
     public void test39() {
         System.out.println(subsetProblems.combinationSum(new int[]{2, 3, 6, 7}, 7));
     }
+
+    @Test
+    public void testfindSubstring() {
+//        System.out.println(solution.findSubstring("barfoothefoobarman", new String[]{"foo","bar"}));
+        System.out.println(solution.findSubstring("wordgoodgoodgoodbestword", new String[]{"word", "good", "best", "good"}));
+    }
+
 
     @Test
     public void test77() {
@@ -140,8 +148,36 @@ public class JUniteTest {
 
     @Test
     public void testnumberOfArithmeticSlices() {
-        System.out.println(dpAndGreedy.numberOfArithmeticSlices(new int[]{1,2,3}));
-        System.out.println(dpAndGreedy.numberOfArithmeticSlices(new int[]{1,2,3,4}));
-        System.out.println(dpAndGreedy.numberOfArithmeticSlices(new int[]{1,2,3,4,6,7,8,9}));
+        System.out.println(dpAndGreedy.numberOfArithmeticSlices(new int[]{1, 2, 3}));
+        System.out.println(dpAndGreedy.numberOfArithmeticSlices(new int[]{1, 2, 3, 4}));
+        System.out.println(dpAndGreedy.numberOfArithmeticSlices(new int[]{1, 2, 3, 4, 6, 7, 8, 9}));
+    }
+
+    @Test
+    public void testmaximalSquare() {
+        System.out.println(dpAndGreedy.maximalSquare(new char[][]{{'1'}}));
+        System.out.println(dpAndGreedy.maximalSquare(new char[][]{{'0'}}));
+        System.out.println(dpAndGreedy.maximalSquare(new char[][]{"11".toCharArray(), "11".toCharArray()}));
+        System.out.println(dpAndGreedy.maximalSquare(new char[][]{"10100".toCharArray(), "10111".toCharArray()
+                , "11111".toCharArray(), "10010".toCharArray()}));
+    }
+
+
+    @Test
+    public void testlengthOfLIS() {
+        System.out.println(dpAndGreedy.lengthOfLIS(new int[]{1}));
+        System.out.println(dpAndGreedy.lengthOfLIS(new int[]{1, 2, 3}));
+        System.out.println(dpAndGreedy.lengthOfLIS(new int[]{}));
+        System.out.println(dpAndGreedy.lengthOfLIS(new int[]{10, 9, 2, 5, 3, 7, 101, 18}));
+    }
+
+    @Test
+    public void testproductExceptSelf() {
+        System.out.println(Arrays.toString(amazon.productExceptSelf(new int[]{1, 2, 3, 4})));
+    }
+
+    @Test
+    public void testfindComplement() {
+        System.out.println(amazon.findComplement(-1));
     }
 }

@@ -338,23 +338,88 @@ public class DPAndGreedy {
 
     // f(i, j) = f(i, k) + f(k, j) for all k from 3 to maxLength;
     public int numberOfArithmeticSlices(int[] A) {
-        int length = A.length;
-        int[][] dp = new int[length][length];
-        for (int i = 0, j = 2; j < length; i++, j++) {
-            if (A[j] - A[j - 1] == A[i + 1] - A[i]) {
-                dp[i][j] = 1;
-            }
+        int[] dp = new int[A.length];
+        if (A.length <= 2) {
+            return 0;
         }
-        for (int i = 0; i < length - 2; i++) {
-            for (int j = i + 2; j < length; j++) {
-                int currentGap = 0;
-                boolean addition = true;
-                for (int k = 3; k <= i - j; k++) {
-
+        if (A[1] - A[0] == A[2] - A[1]) {
+            dp[2] = 1;
+        }
+        for (int i = 3; i > 2 && i < A.length; i++) {
+            dp[i] = dp[i - 1];
+            int currentGap = A[i] - A[i - 1];
+            for (int j = i - 2; j >= 0; j--) {
+                if (A[j + 1] - A[j] == currentGap) {
+                    dp[i]++;
+                } else {
+                    break;
                 }
             }
         }
-        return dp[0][length - 1];
+        return dp[A.length - 1];
+    }
+
+    // f(i, j) = min{f(i - 1, j - 1), f(i, j - 1), f(i - 1, j)} + 1 as long as none of them are '0'
+    public int maximalSquare(char[][] matrix) {
+        int row = matrix.length;
+        if (row == 0) {
+            return 0;
+        }
+        int column = matrix[0].length;
+        int max = 0;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                if (i == 0 || j == 0) {
+                    max = Math.max(matrix[i][j] - '0', max);
+                } else if (matrix[i][j] == '1') {
+                    int topLeft = matrix[i - 1][j - 1] - '0';
+                    int left = matrix[i][j - 1] - '0';
+                    int top = matrix[i - 1][j] - '0';
+                    if (topLeft != 0 && left != 0 && top != 0) {
+                        int min = Math.min(topLeft, Math.min(top, left));
+                        int newValue = min + 1;
+                        matrix[i][j] = (char) (newValue + '0');
+                        max = Math.max(max, newValue * newValue);
+                    }
+                }
+            }
+        }
+
+        return max;
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        if (nums.length == 0) {
+            return 0;
+        }
+        int[] lengths = new int[nums.length + 1];
+        lengths[1] = nums[0];
+        int end = 1;
+
+        for (int i = 1; i < nums.length; i++) {
+            int next = 0;
+            if(nums[i] > lengths[end]){
+                next = ++end;
+            }else{
+                next = binarySearch(lengths, nums[i], 1, end);
+            }
+            lengths[next] = nums[i];
+        }
+        return end;
+    }
+
+    private int binarySearch(int[] lengths, int key, int start, int end) {
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (key == lengths[mid]) {
+                return mid;
+            } else if (key < lengths[mid]) {
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return start;
     }
 
 }
