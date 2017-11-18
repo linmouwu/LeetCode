@@ -606,7 +606,7 @@ public class Solution {
         }
     }
 
-    public int findKthLargest(int[] nums, int k) {
+    public int findKthLargestII(int[] nums, int k) {
         PriorityQueue<Integer> pq = new PriorityQueue<>(k);
         int result = -1;
 
@@ -1308,6 +1308,172 @@ public class Solution {
         return result;
     }
 
+    public void solve(char[][] board) {
+        if (board == null || board.length == 0) {
+            return;
+        }
+
+        boolean[][] marks = new boolean[board.length][board[0].length];
+
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+
+                if (board[i][j] == 'O') {
+                    marks[i][j] = true;
+                }
+
+            }
+        }
+
+        for (int i = 0; i < board.length; i++) {
+
+            if (marks[i][0]) {
+                markUp(i, 0, marks);
+            }
+            if (marks[i][board[0].length - 1]) {
+                markUp(i, board[0].length - 1, marks);
+            }
+        }
+
+
+        for (int j = 0; j < board[0].length; j++) {
+
+            if (marks[0][j]) {
+                markUp(0, j, marks);
+            }
+            if (marks[board.length - 1][j]) {
+                markUp(board.length - 1, j, marks);
+            }
+
+        }
+
+        for (int i = 0; i < board.length; i++) {
+
+            for (int j = 0; j < board[0].length; j++) {
+                if (marks[i][j]) {
+                    board[i][j] = 'X';
+                }
+            }
+
+        }
+
+    }
+
+
+    private void markUp(int i, int j, boolean[][] marks) {
+
+        if (!marks[i][j]) {
+            return;
+        }
+
+        marks[i][j] = false;
+
+        int[][] directions = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+        for (int[] direction : directions) {
+            int nextI = i + direction[0];
+            int nextJ = j + direction[1];
+
+            if (nextI >= 0 && nextI < marks.length && nextJ >= 0 && nextJ < marks[0].length) {
+                markUp(nextI, nextJ, marks);
+            }
+        }
+    }
+
+
+    public int findKthLargest(int[] nums, int k) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+
+        if (nums.length == 1) {
+            return nums[0];
+        }
+
+        int find = partition(0, nums.length - 1, nums);
+
+        while (true) {
+            if (find == k - 1) {
+                return nums[k];
+            } else if (find < k - 1) {
+                find = partition(find + 1, nums.length - 1, nums);
+
+            } else {
+                find = partition(0, find - 1, nums);
+
+            }
+        }
+    }
+
+
+    private int partition(int start, int end, int[] nums) {
+
+        int i = start;
+        int j = end - 1;
+        int pivot = nums[end];
+
+        while (i < j) {
+            while (i < j && nums[i] >= pivot) i++;
+            while (i < j && nums[j] < pivot) j--;
+
+            if (i < j) {
+                swap(i, j, nums);
+            }
+
+        }
+        swap(j, end, nums);
+        return j;
+    }
+
+
+    private void swap(int i, int j, int[] nums) {
+
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+
+    }
+
+    public List<Integer> boundaryOfBinaryTree(TreeNode root) {
+        if (root == null) {
+            return new ArrayList<>();
+        }
+
+        List<Integer> result = new ArrayList<>();
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        int level = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            TreeNode next = queue.poll();
+            if (next.left != null) {
+                queue.offer(next.left);
+            }
+            if (next.right != null) {
+                queue.offer(next.right);
+            }
+            result.add(next.val, level);
+
+            size--;
+            while (size > 0) {
+                next = queue.poll();
+                if (next.left != null) {
+                    queue.offer(next.left);
+                }
+                if (next.right != null) {
+                    queue.offer(next.right);
+                }
+                if (size == 1) {
+                    result.add(next.val, result.size() - level + 1);
+                }
+            }
+            level++;
+        }
+
+        return result;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         TreeNode one = new TreeNode(5);
@@ -1346,7 +1512,7 @@ public class Solution {
         e.next = f;
 
         List<NestedInteger> nestedList = new ArrayList<>();
-        List<NestedInteger> nest = new ArrayList<>();
+        List<Integer> nest = new ArrayList<>();
 
         int[] num1 = new int[]{824, 8248, 824};
         int[] num2 = new int[]{2};
@@ -1373,23 +1539,13 @@ public class Solution {
 
         }
 
-        System.out.println(matrix == copy ? "true" : "false");
-        matrix[0][0] = 4;
-        System.out.println(Arrays.toString(matrix[0]));
-        System.out.println(Arrays.toString(copy[0]));
-
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
         random.nextInt(1000);
 
+        char[][] board = new char[][]{"XXXX".toCharArray(), "XOOX".toCharArray(), "XXOX".toCharArray(), "XOXX".toCharArray()};
 
-        System.out.println(solution.solution("00:01:07,400-234-090\n00:05:01,701-080-080\n00:05:00,400-234-090"));
-        System.out.println(solution.solution("00:01:07,400-234-091\n00:05:01,701-080-080\n00:05:00,400-234-090"));
-        System.out.println(solution.solution("00:01:07,400-234-091\n00:05:01,701-080-080\n00:05:00,400-234-090"));
-        System.out.println(solution.solution("00:01:07,400-234-091\n00:05:01,701-080-080\n00:05:00,400-234-090"));
-        System.out.println(solution.solution("00:01:07,400-234-091\n00:05:01,701-080-080\n00:05:00,400-234-090"));
-        System.out.println(solution.solution("00:01:07,400-234-091\n00:05:01,701-080-080\n00:05:00,400-234-090"));
-        System.out.println(solution.solution("00:01:07,400-234-091\n00:05:01,701-080-080\n00:05:00,400-234-090"));
-        System.out.println(solution.solution("00:01:07,400-234-091\n00:05:01,701-080-080\n00:05:00,400-234-090"));
+//        System.out.println(solution.findKthLargest(new int[]{1, 2, 4, 2, 21, 5, 63, 32, 1, 66, 4}, 4));
+
     }
 }
